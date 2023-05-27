@@ -1,6 +1,6 @@
 const hre = require("hardhat");
 
-async function main() {
+async function notOnlyOwner() {
   /* Deploy del contrato como Owner */
   const nowContract = await hre.ethers.getContractFactory("NotOnlyOwner");
   const contract = await nowContract.deploy();
@@ -20,12 +20,10 @@ async function main() {
   }
   const modified = await contract.getModified();
   if (!modified) {
-    console.log('Test completado correctamente!')
+    return true;
   } else {
-    console.log('CUACK, Revisar el test que esta mal planteado')
+    return false;
   }
 }
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+
+module.exports = notOnlyOwner
