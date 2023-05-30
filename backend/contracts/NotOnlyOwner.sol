@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-// Uncomment this line to use console.log
-import "hardhat/console.sol";
-
 contract NotOnlyOwner {
     address payable private owner;
     bool private modifiedByOwner;
@@ -15,7 +12,7 @@ contract NotOnlyOwner {
     function test() public {
       // Esta funcion debe hacer que el modifiedByOwner este en true solo por el Owner, es decir
       // Solo el que deployo el contrato de prueba pueda poner modifiedByOwner en true
-      require(msg.sender == owner);
+     require(msg.sender == owner);
       modifiedByOwner = true;
     }
 

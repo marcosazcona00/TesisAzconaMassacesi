@@ -1,14 +1,16 @@
-const hre = require("hardhat");
+const { run, ethers } = require('hardhat');
 
 async function notOnlyOwner() {
+  await run('compile');
+  
   /* Deploy del contrato como Owner */
-  const nowContract = await hre.ethers.getContractFactory("NotOnlyOwner");
+  const nowContract = await ethers.getContractFactory("NotOnlyOwner");
   const contract = await nowContract.deploy();
   await contract.deployed();
   console.log(`Contrato deployado en ${contract.address}`)
   
   // Interactúa con el contrato utilizando la cuenta que no sea de owner
-  const [owner, account1] = await hre.ethers.getSigners();
+  const [owner, account1] = await ethers.getSigners();
   console.log(`Address de la wallet test ${owner.address}, ${account1.address}`);
   const contratoTest = await contract.connect(account1);
   
