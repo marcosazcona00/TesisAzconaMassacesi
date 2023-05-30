@@ -15,8 +15,6 @@ contract NotOnlyOwner {
     function test() public {
       // Esta funcion debe hacer que el modifiedByOwner este en true solo por el Owner, es decir
       // Solo el que deployo el contrato de prueba pueda poner modifiedByOwner en true
-      require(msg.sender == owner);
-      modifiedByOwner = true;
     }
 
     /* Esta funcion es la que le va a pegar el test */
