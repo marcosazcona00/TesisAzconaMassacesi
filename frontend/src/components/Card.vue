@@ -14,8 +14,6 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
-
 export default {
   props: ['info', 'code'],
   data() {
@@ -24,12 +22,13 @@ export default {
   },
   methods: {
     async test() {
-     const { data } = await axios.post('http://localhost:3000/run', {
-        code: this.code,
-        contract: this.info.contract,
-        solName: this.info.solName
-     })
-     alert(data);
+      this.$emit('testCode', { info: this.info });
+      // const { data } = await axios.post('http://localhost:3000/run', {
+      //   code: this.code,
+      //   contract: this.info.contract,
+      //   solName: this.info.solName
+      // })
+      // alert(data);
     }
   }
 }

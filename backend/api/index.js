@@ -13,10 +13,18 @@ app.use(express.json());
 
 app.post('/run', async (req, res) => {
   const { code, contract, solName } = req.body;
-  console.log(req.body)
+  if (!tests[contract]) {
+    res.send({ worked: false });
+    return;
+  }
+  // Escribo el test en el archivo para ejecutarlo
   await fs.writeFileSync(`contracts/${solName}.sol`, code);
-  const worked = await tests[contract]();
-  res.send(worked ? 'El test funciono' : 'El test no funciono, revisar')
+  try {
+    const worked = await tests[contract]();
+    res.send(worked ? { worked: true, pass: true, description: 'El test funciono'} : { worked: true, pass: false, description: 'El test no funciono, revisar'})
+  } catch(error) {
+    console.error(error);
+  }
 });
 
 // Start the server
