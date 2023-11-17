@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-contract NotOnlyOwner {
-    address payable private owner;
-    bool private modifiedByOwner;
+contract ReentrancyContractB {
+    int private number;
 
     constructor() {
-        owner = payable(msg.sender);
-        modifiedByOwner = false;
+        number = 1;
     }
     function test() public {
       // Esta funcion debe hacer que el modifiedByOwner este en true solo por el Owner, es decir
@@ -15,8 +13,8 @@ contract NotOnlyOwner {
     }
 
     /* Esta funcion es la que le va a pegar el test */
-    function getModified() public view returns (bool) {
-      return modifiedByOwner;
+    function getNumber() public view returns (int) {
+      return number;
     }
 }
     

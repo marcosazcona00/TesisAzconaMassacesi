@@ -26,8 +26,9 @@ export default {
   },
   methods: {
     async getChallenge() {
-      const { data: { contract } } = await axios.get(`http://localhost:3000/challenge/${this.info.contract}`);
-      this.$emit('setContract', contract)
+      // const { data: contracts } = await axios.get(`http://localhost:3000/challenge/${this.info.contract}`);
+      const { data: contracts } = await axios.get(`http://localhost:3000/challenge/reentrancy`);
+      this.$emit('setContract', contracts)
       this.show = true;
     },
     async test() {

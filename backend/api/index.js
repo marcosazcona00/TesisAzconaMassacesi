@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('node:path'); 
-
 const express = require('express');
 const cors = require('cors');
 
 const tests = require('./tests/index')
+const challenges = require('./constants/challenges');
+const { getAllDirContracts } = require('../lib/utils');
 
 const app = express();
 const port = 3000;
@@ -12,7 +13,12 @@ const port = 3000;
 app.use(cors())
 app.use(express.json());
 
-app.get('/challenge/:id', async (req, res) => {
+
+app.get('/challenges/list', (req, res) => {
+  res.send(challenges);
+})
+
+app.get('/challenge2/:id', async (req, res) => {
   // Validar el id
   const { id } = req.params;
   const filePath = path.join(__dirname, 'tests', id, `${id}.sol`);
@@ -20,6 +26,14 @@ app.get('/challenge/:id', async (req, res) => {
   res.send({
     contract: vulnerableContract,
   })
+})
+
+app.get('/challenge/:id', async (req, res) => {
+  // Validar el id
+  const { id } = req.params;
+  const filePath = path.join(__dirname, 'tests', id);
+  const contracts = await getAllDirContracts(id, filePath);
+  res.json(contracts)
 })
 
 app.post('/run', async (req, res) => {
