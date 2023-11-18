@@ -13,3 +13,6 @@ Rellenar el contrato NotOnlyOwner.sol
 Ejecutar npx hardhat compile
 Levantar con npm run serve
 Pegarle a localhost:3000/
+
+# Correr pm2
+pm2 start
