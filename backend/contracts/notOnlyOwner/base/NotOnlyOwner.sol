@@ -19,4 +19,3 @@ contract NotOnlyOwner {
       return modifiedByOwner;
     }
 }
-    

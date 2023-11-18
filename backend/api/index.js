@@ -3,9 +3,10 @@ const path = require('node:path');
 const express = require('express');
 const cors = require('cors');
 
+
 const tests = require('./tests/index')
 const challenges = require('./constants/challenges');
-const { getAllDirContracts } = require('../lib/utils');
+const { generateRandomString, addTestContractName, getAllDirContracts } = require('../lib/utils');
 
 const app = express();
 const port = 3000;
@@ -18,21 +19,10 @@ app.get('/challenges/list', (req, res) => {
   res.send(challenges);
 })
 
-app.get('/challenge2/:id', async (req, res) => {
-  // Validar el id
-  const { id } = req.params;
-  const filePath = path.join(__dirname, 'tests', id, `${id}.sol`);
-  const vulnerableContract = await fs.readFileSync(filePath, 'utf-8');
-  res.send({
-    contract: vulnerableContract,
-  })
-})
-
 app.get('/challenge/:id', async (req, res) => {
   // Validar el id
   const { id } = req.params;
-  const filePath = path.join(__dirname, 'tests', id);
-  const contracts = await getAllDirContracts(id, filePath);
+  const contracts = await getAllDirContracts(id);
   res.json(contracts)
 })
 
@@ -42,10 +32,14 @@ app.post('/run', async (req, res) => {
     res.send({ worked: false });
     return;
   }
-  // Escribo el test en el archivo para ejecutarlo
-  await fs.writeFileSync(`contracts/${solName}/${solName}.sol`, code);
+  // Escribo el test en el archivo para ejecutarlo, le agrego al contrato el nombre Test adelante
+  const randomString = generateRandomString();
+  const modifiedCode = addTestContractName(code, randomString);
+  const contractName = `contracts/${randomString}Test${solName}.sol`;
+  await fs.writeFileSync(contractName, modifiedCode);
   try {
-    const worked = await tests[contract]();
+    const worked = await tests[contract](randomString);
+    await fs.unlinkSync(contractName);
     res.send(worked ? { worked: true, pass: true, description: 'El test funciono'} : { worked: true, pass: false, description: 'El test no funciono, revisar'})
   } catch(error) {
     console.error(error);

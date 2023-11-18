@@ -1,10 +1,9 @@
 const { run, ethers } = require('hardhat');
 
-async function notOnlyOwner() {
+async function notOnlyOwner(randomString) {
   await run('compile');
-  
   /* Deploy del contrato como Owner */  
-  const nowContract = await ethers.getContractFactory(`${process.env.DEVELOP === 1 ? 'Test' : ''}NotOnlyOwner`);
+  const nowContract = await ethers.getContractFactory(`${randomString}TestNotOnlyOwner`);
   const contract = await nowContract.deploy();
   await contract.deployed();
   console.log(`Contrato deployado en ${contract.address}`)

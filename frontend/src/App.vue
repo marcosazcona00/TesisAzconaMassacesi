@@ -84,7 +84,6 @@ export default {
       this.actualEditor = 0;
       await this.sleep(1); // El sleep es para darle tiempo a que se rendericen los div editores
       contracts.forEach((contract, i) => {
-        console.log(`#editor${i}`);
         const editor = new EditorView({
           state: EditorState.create({
             doc: contract.code,
@@ -93,7 +92,8 @@ export default {
               solidity,
               oneDark,
               keymap.of([indentWithTab]),
-            ],
+              EditorView.editable.of(contract.editable)
+            ]
           }),
           parent: document.querySelector(`#editor${i}`),
         });
@@ -102,7 +102,7 @@ export default {
     },
     async testCode({ info }) {
       const { data } = await axios.post('http://localhost:3000/run', {
-        code: this.editor.state.doc.toString(),
+        code: this.editors[0].state.doc.toString(),
         contract: info.contract,
         solName: info.solName
       })
