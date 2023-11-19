@@ -100,12 +100,21 @@ export default {
         this.editors.push(editor);
       })
     },
+    getEditableContracts() {
+      // Devuelve los contratos que pudieron editarse, para que el back guarde esos solos
+      return this.contracts.reduce((acc, act, index) => {
+        if (act.editable) {
+          acc.push({
+            code: this.editors[index].state.doc.toString(),
+            name: act.name,
+          })
+        }
+        return acc;
+      }, []);
+    },
     async testCode({ info }) {
-      const { data } = await axios.post('http://localhost:3000/run', {
-        code: this.editors[0].state.doc.toString(),
-        contract: info.contract,
-        solName: info.solName
-      })
+      const editableContracts = this.getEditableContracts();
+      const { data } = await axios.post('http://localhost:3000/run', { contract: info.contract, editableContracts });
       alert(data.description);
     }
   }

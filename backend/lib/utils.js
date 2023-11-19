@@ -11,6 +11,7 @@ function generateRandomString(length = 10) {
   return randomString;
 }
 
+
 function addTestContractName(solCode, timestamp) {
   // Al nombre del contrato le agregamos Test adelante
   // Buscar el nombre original del contrato
@@ -27,6 +28,24 @@ function addTestContractName(solCode, timestamp) {
 
 function filterSolidityFiles(files) {
   return files.filter(fileName => /\.sol$/.test(fileName));
+}
+
+async function createContractsFiles(editableContracts, randomString) {
+  const contractsNames = [];
+  for (let i = 0; i < editableContracts.length; i += 1) {
+    const contract = editableContracts[i];
+    const modifiedCode = addTestContractName(contract.code, randomString);
+    const contractName = `contracts/${randomString}Test${contract.name}`;
+    contractsNames.push(contractName);
+    await fs.writeFileSync(contractName, modifiedCode);
+  }
+  return contractsNames;
+}
+
+async function deleleteContractsFiles(contractsNames) {
+  for (let i = 0; i < contractsNames.length; i += 1) {
+    await fs.unlinkSync(contractsNames[i]);
+  }
 }
 
 async function readDir(dirPath) {
@@ -61,6 +80,7 @@ async function getAllDirContracts(idVuln) {
 
 module.exports = {
   getAllDirContracts,
-  addTestContractName,
   generateRandomString,
+  createContractsFiles,
+  deleleteContractsFiles,
 }
